@@ -505,7 +505,7 @@
         }
 
         .card-header {
-            padding: 12px 12px;
+            padding: 10px 10px;
             background: linear-gradient(to bottom, var(--bg-card), #F8FAFC);
             border-bottom: 1px solid var(--border-light);
             display: flex;
@@ -516,9 +516,9 @@
         .badge-store {
             background: var(--bg-body);
             color: var(--text-secondary);
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
-            padding: 6px 10px;
+            padding: 4px 8px;
             border-radius: 6px;
             text-transform: uppercase;
             letter-spacing: 0.3px;
@@ -533,16 +533,17 @@
         }
 
         .card-body {
-            padding: 12px;
+            padding: 10px;
             flex: 1;
-            overflow-y: auto;
+            overflow-y: scroll;
+            -webkit-overflow-scrolling: touch;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
         .item-label {
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 700;
             color: var(--accent);
             text-transform: uppercase;
@@ -550,27 +551,27 @@
         }
 
         .item-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 700;
             color: var(--text-primary);
             margin: 0;
-            line-height: 1.3;
+            line-height: 1.25;
             letter-spacing: -0.3px;
         }
 
         .meta-grid {
-            margin-top: 8px;
+            margin-top: 6px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            grid-template-columns: 1fr;
+            gap: 4px;
         }
 
         .meta-item {
-            font-size: 12px;
+            font-size: 11px;
             color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 3px;
         }
 
         .card-footer {
@@ -586,10 +587,10 @@
             background: var(--accent);
             color: white;
             text-decoration: none;
-            padding: 10px 12px;
+            padding: 8px 10px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             transition: all 0.2s ease;
             border: none;
             cursor: pointer;
