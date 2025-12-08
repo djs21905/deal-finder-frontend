@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Deals Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- THEME VARIABLES --- */
+        :root {
+            --primary: #111827;
+            --bg-body: #F3F4F6;
+            --bg-card: #FFFFFF;
+            --red: #EF4444;
+            --green: #10B981;
+            --blue: #3B82F6;
+            --border: #E5E7EB;
+
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --header-height: 110px;
+            /* Accommodate toggle row */
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-body);
+            margin: 0;
+            padding: 0;
+            height: 100dvh;
+            display: flex;
+            flex-direction: column;
+            color: var(--primary);
+            overflow: hidden;
+        }
+
+        /* --- LOGIN --- */
+        #login-container {
+            position: absolute;
+            inset: 0;
+            background: var(--bg-body);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 320px;
+            box-shadow: var(--shadow-card);
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #F9FAFB;
+            font-size: 16px;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            margin-top: 10px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* --- HEADER --- */
+        header {
+            flex-shrink: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 10px 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 50;
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        /* Controls Row (Sort + View Toggle) */
+        .controls-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .sort-select {
+            flex: 1;
+            appearance: none;
+            -webkit-appearance: none;
+            background: #F3F4F6;
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        /* View Toggles (Card vs Table) */
+        .view-toggles {
+            display: flex;
+            background: #F3F4F6;
+            border-radius: 10px;
+            padding: 2px;
+            border: 1px solid var(--border);
+        }
+
+        .toggle-btn {
+            padding: 6px 10px;
+            border: none;
+            background: transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #9CA3AF;
+        }
+
+        .toggle-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            background: #E5E7EB;
+            padding: 4px;
+            border-radius: 12px;
+            margin-top: 4px;
+        }
+
+        .tab-btn {
+            flex: 1;
+            padding: 8px;
+            border: none;
+            background: transparent;
+            font-size: 13px;
+            font-weight: 600;
+            color: #6B7280;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        /* --- MAIN CONTAINER --- */
+        #main-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- DISCOVER VIEW --- */
+        #discover-view {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* MODE 1: CARD STACK */
+        #discover-card-mode {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+
+        .stack-area {
+            flex: 1;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        #card-stack {
+            position: relative;
+            width: 90%;
+            max-width: 400px;
+            height: 90%;
+        }
+
+        .actions-area {
+            flex-shrink: 0;
+            height: 90px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        /* MODE 2: TABLE LIST */
+        #discover-table-mode {
+            display: none;
+            /* Hidden by default */
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background: white;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 350px;
+        }
+
+        .data-table th {
+            position: sticky;
+            top: 0;
+            background: #F9FAFB;
+            z-index: 10;
+            text-align: left;
+            padding: 12px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #6B7280;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .data-table td {
+            padding: 12px 10px;
+            border-bottom: 1px solid #F3F4F6;
+            vertical-align: middle;
+            font-size: 13px;
+        }
+
+        .tbl-price {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .tbl-store {
+            font-size: 11px;
+            color: #6B7280;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .tbl-title {
+            font-weight: 600;
+            color: #111827;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .tbl-meta {
+            font-size: 11px;
+            color: #9CA3AF;
+        }
+
+        .tbl-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .mini-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .mini-like {
+            background: #ECFDF5;
+            color: var(--green);
+        }
+
+        .mini-nope {
+            background: #FEF2F2;
+            color: var(--red);
+        }
+
+        /* --- CARDS CSS --- */
+        .swipe-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-card);
+            border-radius: 24px;
+            box-shadow: var(--shadow-card);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transform-origin: 50% 100%;
+            cursor: grab;
+        }
+
+        .card-header {
+            padding: 20px;
+            background: linear-gradient(to bottom, #fff, #f9fafb);
+            border-bottom: 1px solid #F3F4F6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .badge-store {
+            background: #E5E7EB;
+            color: #374151;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            text-transform: uppercase;
+        }
+
+        .price {
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--primary);
+        }
+
+        .card-body {
+            padding: 20px;
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .item-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--blue);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .item-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1F2937;
+            margin: 0;
+            line-height: 1.3;
+        }
+
+        .meta-grid {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        .meta-item {
+            font-size: 13px;
+            color: #4B5563;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-footer {
+            padding: 15px 20px;
+            background: white;
+            border-top: 1px solid #F3F4F6;
+        }
+
+        .btn-link {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background: #EFF6FF;
+            color: var(--blue);
+            text-decoration: none;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        /* Buttons */
+        .circle-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--shadow-card);
+            background: white;
+        }
+
+        .btn-nope {
+            color: var(--red);
+            border: 2px solid #FEE2E2;
+        }
+
+        .btn-like {
+            color: var(--green);
+            border: 2px solid #D1FAE5;
+        }
+
+        /* Badges */
+        .status-badge {
+            position: absolute;
+            top: 30px;
+            padding: 10px 20px;
+            border: 4px solid;
+            border-radius: 12px;
+            font-size: 32px;
+            font-weight: 800;
+            text-transform: uppercase;
+            opacity: 0;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .badge-like {
+            right: 30px;
+            border-color: var(--green);
+            color: var(--green);
+            transform: rotate(15deg);
+        }
+
+        .badge-nope {
+            left: 30px;
+            border-color: var(--red);
+            color: var(--red);
+            transform: rotate(-15deg);
+        }
+
+        /* --- SAVED VIEW --- */
+        #saved-view {
+            display: none;
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+            padding: 15px;
+            padding-bottom: 50px;
+        }
+
+        .group-header {
+            font-size: 12px;
+            font-weight: 700;
+            color: #9CA3AF;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 20px 0 10px 5px;
+        }
+
+        .saved-item {
+            background: white;
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .saved-content h3 {
+            font-size: 15px;
+            margin: 0 0 5px 0;
+            font-weight: 600;
+        }
+
+        .btn-trash {
+            background: #FEF2F2;
+            color: var(--red);
+            border: none;
+            width: 35px;
+            height: 35px;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        #empty-state {
+            display: none;
+            text-align: center;
+            color: #9CA3AF;
+            margin-top: 40%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- AUTH -->
+    <div id="login-container">
+        <div class="login-box">
+            <h1 style="margin: 0 0 10px 0;">Deals Manager</h1>
+            <form onsubmit="login(event)">
+                <input type="email" id="email" class="login-input" placeholder="Email" required />
+                <input type="password" id="password" class="login-input" placeholder="Password" required />
+                <button type="submit" class="btn-login">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- HEADER -->
+    <header id="app-header" style="display:none;">
+        <div class="header-top">
+            <div class="app-title">Deals</div>
+
+            <div class="controls-row">
+                <!-- VIEW TOGGLES -->
+                <div class="view-toggles">
+                    <button class="toggle-btn active" id="btn-card-view" onclick="switchViewMode('card')">
+                        <!-- Card Icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
+                            <line x1="8" y1="18" x2="16" y2="18"></line>
+                        </svg>
+                    </button>
+                    <button class="toggle-btn" id="btn-table-view" onclick="switchViewMode('table')">
+                        <!-- Table Icon -->
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"></line>
+                            <line x1="8" y1="12" x2="21" y2="12"></line>
+                            <line x1="8" y1="18" x2="21" y2="18"></line>
+                            <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                            <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                            <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <select id="sort-select" class="sort-select" onchange="changeSort(this.value)">
+                <option value="random">Shuffle</option>
+                <option value="name">Name (A-Z)</option>
+                <option value="price_asc">Price (Low)</option>
+                <option value="price_desc">Price (High)</option>
+            </select>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn active" id="tab-discover" onclick="switchTab('discover')">Discover</button>
+            <button class="tab-btn" id="tab-saved" onclick="switchTab('saved')">Saved</button>
+            <button class="tab-btn" onclick="logout()" style="flex: 0 0 auto; color: var(--red);">Exit</button>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+    <div id="main-container" style="display:none;">
+
+        <!-- DISCOVER VIEW -->
+        <div id="discover-view">
+
+            <!-- SUB-VIEW: CARD STACK -->
+            <div id="discover-card-mode">
+                <div class="stack-area">
+                    <div id="card-stack">
+                        <div id="empty-state">🎉 All caught up!</div>
+                    </div>
+                </div>
+                <div class="actions-area">
+                    <button class="circle-btn btn-nope" onclick="forceSwipe('left')">✕</button>
+                    <button class="circle-btn btn-like" onclick="forceSwipe('right')">♥</button>
+                </div>
+            </div>
+
+            <!-- SUB-VIEW: TABLE LIST -->
+            <div id="discover-table-mode">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Details</th>
+                            <th style="text-align:right">Price</th>
+                            <th style="text-align:right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body">
+                        <!-- Rows go here -->
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+
+        <!-- SAVED VIEW -->
+        <div id="saved-view">
+            <div id="saved-list"></div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://jjjekqaopeaxspzxrxid.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqamVrcWFvcGVheHNwenhyeGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwOTI0OTYsImV4cCI6MjA4MDY2ODQ5Nn0.KWft22KvscGdHxaBp5FXk4xWhBq1WDiQYyFnlZJ9ajs';
+
+        const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        let deals = [];
+        let currentSort = 'random';
+        let viewMode = 'card'; // 'card' or 'table'
+
+        async function init() {
+            const { data: { session } } = await supabase.auth.getSession();
+            if (session) showApp();
+        }
+        init();
+
+        window.login = async function (e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const { error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) alert(error.message); else showApp();
+        }
+
+        window.logout = async function () { await supabase.auth.signOut(); location.reload(); }
+
+        function showApp() {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('app-header').style.display = 'flex';
+            document.getElementById('main-container').style.display = 'flex';
+            loadDiscover();
+        }
+
+        // --- NAVIGATION & VIEWS ---
+        window.switchTab = function (tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+
+            const discover = document.getElementById('discover-view');
+            const saved = document.getElementById('saved-view');
+            const toggles = document.querySelector('.view-toggles');
+            const sort = document.getElementById('sort-select');
+
+            if (tab === 'discover') {
+                saved.style.display = 'none';
+                discover.style.display = 'flex';
+                toggles.style.visibility = 'visible';
+                sort.style.visibility = 'visible';
+                loadDiscover();
+            } else {
+                discover.style.display = 'none';
+                saved.style.display = 'block';
+                toggles.style.visibility = 'hidden';
+                sort.style.visibility = 'hidden';
+                loadSaved();
+            }
+        }
+
+        window.switchViewMode = function (mode) {
+            viewMode = mode;
+            document.getElementById('btn-card-view').classList.toggle('active', mode === 'card');
+            document.getElementById('btn-table-view').classList.toggle('active', mode === 'table');
+
+            document.getElementById('discover-card-mode').style.display = mode === 'card' ? 'flex' : 'none';
+            document.getElementById('discover-table-mode').style.display = mode === 'table' ? 'block' : 'none';
+
+            // Re-render based on current mode
+            if (mode === 'table') renderTable();
+            else renderStack();
+        }
+
+        window.changeSort = function (val) {
+            currentSort = val;
+            loadDiscover();
+        }
+
+        // --- DATA LOADING ---
+        async function loadDiscover() {
+            const { data, error } = await supabase.from('deals').select('*').eq('status', 'new');
+            if (error) return console.error(error);
+
+            if (currentSort === 'random') {
+                for (let i = data.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [data[i], data[j]] = [data[j], data[i]];
+                }
+            } else if (currentSort === 'name') {
+                data.sort((a, b) => (a.item_name || '').localeCompare(b.item_name || ''));
+            } else if (currentSort === 'price_asc') {
+                data.sort((a, b) => a.price - b.price);
+            } else if (currentSort === 'price_desc') {
+                data.sort((a, b) => b.price - a.price);
+            }
+
+            deals = data || [];
+
+            // Render active view
+            if (viewMode === 'card') renderStack();
+            else renderTable();
+        }
+
+        // --- RENDER CARD STACK ---
+        function renderStack() {
+            const container = document.getElementById('card-stack');
+            const empty = document.getElementById('empty-state');
+            Array.from(container.querySelectorAll('.swipe-card')).forEach(c => c.remove());
+
+            if (deals.length === 0) {
+                empty.style.display = 'block';
+                return;
+            } else empty.style.display = 'none';
+
+            deals.slice().reverse().forEach(deal => {
+                const card = document.createElement('div');
+                card.className = 'swipe-card';
+                card.dataset.id = deal.id;
+
+                const dateStr = deal.discovered_at ? new Date(deal.discovered_at).toLocaleDateString() : 'N/A';
+                const store = deal.online_store || 'Unknown';
+                const loc = (deal.city) ? `${deal.city}, ${deal.state}` : 'Online';
+
+                card.innerHTML = `
+                    <div class="status-badge badge-nope">NOPE</div>
+                    <div class="status-badge badge-like">LIKE</div>
+                    <div class="card-header">
+                        <span class="badge-store">${store}</span>
+                        <div class="price">$${deal.price}</div>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <div class="item-label">${deal.item_name || 'Item'}</div>
+                            <h2 class="item-title">${deal.listing_title || 'Untitled'}</h2>
+                        </div>
+                        <div class="meta-grid">
+                            <div class="meta-item">📍 ${loc}</div>
+                            <div class="meta-item">📅 ${dateStr}</div>
+                            <div class="meta-item">🆔 ${deal.batch_id || '-'}</div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <a href="${deal.listing_url}" target="_blank" class="btn-link">View Listing ↗</a>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            initSwipe();
+        }
+
+        // --- RENDER TABLE ---
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+
+            if (deals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;padding:20px;">No deals found</td></tr>';
+                return;
+            }
+
+            deals.forEach(deal => {
+                const tr = document.createElement('tr');
+                const store = deal.online_store || 'Unknown';
+                const dateStr = deal.discovered_at ? new Date(deal.discovered_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }) : '-';
+
+                tr.innerHTML = `
+                    <td>
+                        <div class="tbl-store">${store} • ${dateStr}</div>
+                        <a href="${deal.listing_url}" target="_blank" class="tbl-title">${deal.listing_title || deal.item_name}</a>
+                        <div class="tbl-meta">${deal.city ? deal.city + ', ' + deal.state : 'Online'}</div>
+                    </td>
+                    <td style="text-align:right">
+                        <div class="tbl-price">$${deal.price}</div>
+                    </td>
+                    <td style="text-align:right">
+                        <div class="tbl-actions">
+                            <button class="mini-btn mini-nope" onclick="handleTableAction(${deal.id}, 'deleted')">✕</button>
+                            <button class="mini-btn mini-like" onclick="handleTableAction(${deal.id}, 'saved')">✓</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        window.handleTableAction = async function (id, status) {
+            // Optimistic UI Update
+            deals = deals.filter(d => d.id !== id);
+            renderTable(); // Re-render table
+
+            await supabase.from('deals').update({ status }).eq('id', id);
+        }
+
+        // --- SAVED VIEW ---
+        async function loadSaved() {
+            const list = document.getElementById('saved-list');
+            list.innerHTML = '<div style="text-align:center;color:#888;margin-top:20px;">Loading...</div>';
+
+            const { data, error } = await supabase.from('deals').select('*').eq('status', 'saved');
+
+            list.innerHTML = '';
+            if (!data || data.length === 0) {
+                list.innerHTML = '<div style="text-align:center;color:#888;margin-top:50px;">No saved items</div>';
+                return;
+            }
+
+            const groups = data.reduce((acc, obj) => {
+                const key = obj.item_name || 'Other';
+                if (!acc[key]) acc[key] = [];
+                acc[key].push(obj);
+                return acc;
+            }, {});
+
+            Object.keys(groups).sort().forEach(group => {
+                const header = document.createElement('div');
+                header.className = 'group-header';
+                header.textContent = group;
+                list.appendChild(header);
+
+                groups[group].forEach(deal => {
+                    const item = document.createElement('div');
+                    item.className = 'saved-item';
+                    item.innerHTML = `
+                        <div class="saved-content">
+                            <h3>${deal.listing_title}</h3>
+                            <p style="color:#6B7280; font-size:12px;">${deal.online_store} • $${deal.price}</p>
+                            <a href="${deal.listing_url}" target="_blank" style="font-size:12px;color:var(--blue);">View Link</a>
+                        </div>
+                        <button class="btn-trash" onclick="deleteSaved(${deal.id})">🗑</button>
+                    `;
+                    list.appendChild(item);
+                });
+            });
+        }
+
+        window.deleteSaved = async function (id) {
+            if (!confirm("Remove from saved?")) return;
+            await supabase.from('deals').update({ status: 'deleted' }).eq('id', id);
+            loadSaved();
+        }
+
+        // --- SWIPE PHYSICS ---
+        function initSwipe() {
+            const cards = document.querySelectorAll('.swipe-card');
+            if (cards.length === 0) return;
+            const top = cards[cards.length - 1];
+            let isDragging = false, startX = 0, currentX = 0;
+
+            const start = (x) => { isDragging = true; startX = x; top.style.transition = 'none'; };
+            const move = (x) => {
+                if (!isDragging) return;
+                currentX = x - startX;
+                top.style.transform = `translateX(${currentX}px) rotate(${currentX * 0.05}deg)`;
+                const like = top.querySelector('.badge-like');
+                const nope = top.querySelector('.badge-nope');
+                if (currentX > 0) { like.style.opacity = Math.min(currentX / 100, 1); nope.style.opacity = 0; }
+                else { nope.style.opacity = Math.min(Math.abs(currentX) / 100, 1); like.style.opacity = 0; }
+            };
+            const end = () => {
+                isDragging = false;
+                top.style.transition = 'transform 0.4s ease';
+                if (currentX > 100) {
+                    top.style.transform = `translateX(120vw) rotate(30deg)`;
+                    processSwipe(top.dataset.id, 'saved');
+                } else if (currentX < -100) {
+                    top.style.transform = `translateX(-120vw) rotate(-30deg)`;
+                    processSwipe(top.dataset.id, 'deleted');
+                } else {
+                    top.style.transform = 'translate(0) rotate(0)';
+                    top.querySelectorAll('.status-badge').forEach(b => b.style.opacity = 0);
+                }
+                currentX = 0;
+            };
+
+            top.addEventListener('touchstart', e => start(e.touches[0].clientX));
+            top.addEventListener('touchmove', e => move(e.touches[0].clientX));
+            top.addEventListener('touchend', end);
+            top.addEventListener('mousedown', e => start(e.clientX));
+            document.addEventListener('mousemove', e => isDragging && move(e.clientX));
+            document.addEventListener('mouseup', () => isDragging && end());
+        }
+
+        async function processSwipe(id, status) {
+            // Wait for animation
+            setTimeout(async () => {
+                const card = document.querySelector(`.swipe-card[data-id='${id}']`);
+                if (card) card.remove();
+
+                // Remove from local array so table view matches
+                deals = deals.filter(d => d.id != id);
+
+                if (document.querySelectorAll('.swipe-card').length === 0) {
+                    document.getElementById('empty-state').style.display = 'block';
+                }
+                initSwipe(); // re-init next card
+
+                await supabase.from('deals').update({ status }).eq('id', id);
+            }, 300);
+        }
+
+        window.forceSwipe = function (dir) {
+            const cards = document.querySelectorAll('.swipe-card');
+            if (!cards.length) return;
+            const top = cards[cards.length - 1];
+            top.style.transition = 'transform 0.5s ease-out';
+            top.style.transform = `translateX(${dir === 'right' ? 1000 : -1000}px) rotate(${dir === 'right' ? 30 : -30}deg)`;
+            processSwipe(top.dataset.id, dir === 'right' ? 'saved' : 'deleted');
+        }
+    </script>
+</body>
+
+</html>
