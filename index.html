@@ -1717,7 +1717,10 @@
             };
 
             top.addEventListener('touchstart', e => start(e.touches[0].clientX));
-            top.addEventListener('touchmove', e => move(e.touches[0].clientX));
+            top.addEventListener('touchmove', e => {
+                move(e.touches[0].clientX);
+                if (isDragging) e.preventDefault();
+            }, { passive: false });
             top.addEventListener('touchend', end);
             top.addEventListener('mousedown', e => start(e.clientX));
             document.addEventListener('mousemove', e => isDragging && move(e.clientX));
