@@ -575,9 +575,7 @@
         }
 
         .card-footer {
-            padding: 8px 12px;
-            background: white;
-            border-top: 1px solid var(--border-light);
+            display: none;
         }
 
         .btn-link {
@@ -995,10 +993,12 @@
             z-index: 999;
             flex-direction: column;
             overflow: hidden;
+            pointer-events: none;
         }
 
         .detail-overlay.active {
             display: flex;
+            pointer-events: auto;
         }
 
         .detail-header {
@@ -1447,9 +1447,7 @@
                 card.className = 'swipe-card';
                 card.dataset.id = deal.id;
 
-                const dateStr = deal.discovered_at ? new Date(deal.discovered_at).toLocaleDateString() : 'N/A';
                 const store = deal.online_store || 'Unknown';
-                const loc = (deal.city) ? `${deal.city}, ${deal.state}` : 'Online';
 
                 card.innerHTML = `
                     <div class="status-badge badge-nope">NOPE</div>
@@ -1459,18 +1457,10 @@
                         <div class="price">$${deal.price}</div>
                     </div>
                     <div class="card-body">
-                        <div>
-                            <div class="item-label">${deal.item_name || 'Item'}</div>
-                            <h2 class="item-title">${deal.listing_title || 'Untitled'}</h2>
-                        </div>
-                        <div class="meta-grid">
-                            <div class="meta-item">📍 ${loc}</div>
-                            <div class="meta-item">📅 ${dateStr}</div>
-                            <div class="meta-item">🆔 ${deal.batch_id || '-'}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="${deal.listing_url}" target="_blank" class="btn-link">View Listing ↗</a>
+                        <div class="item-label">${deal.item_name || 'Item'}</div>
+                        <h2 class="item-title">${deal.listing_title || 'Untitled'}</h2>
+                        <div style="margin-top: auto;"></div>
+                        <div style="text-align: center; color: var(--text-tertiary); font-size: 12px;">👆 Tap for details</div>
                     </div>
                 `;
                 container.appendChild(card);
@@ -1591,9 +1581,15 @@
             if (!currentDetailDeal) return;
             const id = currentDetailDeal.id;
             closeDetailView();
+
+            // Remove from array first
             deals = deals.filter(d => d.id != id);
             updateDealCounter();
+
+            // Re-render and re-init swipe
             renderStack();
+
+            // Update database
             await supabase.from('deals').update({ status: 'deleted' }).eq('id', id);
         }
 
@@ -1601,9 +1597,15 @@
             if (!currentDetailDeal) return;
             const id = currentDetailDeal.id;
             closeDetailView();
+
+            // Remove from array first
             deals = deals.filter(d => d.id != id);
             updateDealCounter();
+
+            // Re-render and re-init swipe
             renderStack();
+
+            // Update database
             await supabase.from('deals').update({ status: 'saved' }).eq('id', id);
         }
 
