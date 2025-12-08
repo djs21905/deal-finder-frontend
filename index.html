@@ -986,6 +986,123 @@
             transform: scale(0.98);
         }
 
+        /* --- FULLSCREEN DETAIL VIEW --- */
+        .detail-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: white;
+            z-index: 999;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .detail-overlay.active {
+            display: flex;
+        }
+
+        .detail-header {
+            flex-shrink: 0;
+            padding: 16px;
+            padding-top: max(16px, env(safe-area-inset-top));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg-card);
+        }
+
+        .detail-close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+        }
+
+        .detail-close-btn:hover {
+            background: var(--bg-body);
+            border-radius: 8px;
+        }
+
+        .detail-content {
+            flex: 1;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .detail-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            color: var(--text-primary);
+            line-height: 1.5;
+        }
+
+        .detail-actions {
+            flex-shrink: 0;
+            display: flex;
+            gap: 12px;
+            padding: 16px;
+            padding-bottom: max(16px, env(safe-area-inset-bottom));
+            background: var(--bg-body);
+            border-top: 1px solid var(--border);
+        }
+
+        .detail-btn {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .detail-btn-reject {
+            background: #FEF2F2;
+            color: var(--error);
+            border: 1px solid #FECACA;
+        }
+
+        .detail-btn-reject:active {
+            background: #FECACA;
+        }
+
+        .detail-btn-save {
+            background: #ECFDF5;
+            color: var(--success);
+            border: 1px solid #D1FAE5;
+        }
+
+        .detail-btn-save:active {
+            background: #D1FAE5;
+        }
+
         /* --- LANDSCAPE MODE --- */
         @media (max-height: 500px) {
             header {
@@ -1122,6 +1239,19 @@
     <!-- CONTENT -->
     <div id="main-container" style="display:none;">
 
+        <!-- DETAIL VIEW OVERLAY -->
+        <div id="detail-overlay" class="detail-overlay">
+            <div class="detail-header">
+                <div></div>
+                <button class="detail-close-btn" onclick="closeDetailView()">✕</button>
+            </div>
+            <div class="detail-content" id="detail-content"></div>
+            <div class="detail-actions">
+                <button class="detail-btn detail-btn-reject" onclick="rejectFromDetail()">✕ Not Interested</button>
+                <button class="detail-btn detail-btn-save" onclick="saveFromDetail()">♥ Save Deal</button>
+            </div>
+        </div>
+
         <!-- DISCOVER VIEW -->
         <div id="discover-view">
 
@@ -1182,6 +1312,7 @@
         let currentSort = 'random';
         let viewMode = 'card'; // 'card' or 'table'
         let dealsLoaded = false; // Track if deals have been loaded
+        let currentDetailDeal = null; // Track the deal being viewed in detail
 
         async function init() {
             const { data: { session } } = await supabase.auth.getSession();
@@ -1343,6 +1474,9 @@
                     </div>
                 `;
                 container.appendChild(card);
+                card.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'A') openDetailView(deal);
+                });
             });
             initSwipe();
         }
@@ -1402,6 +1536,75 @@
             } else {
                 counter.style.display = 'none';
             }
+        }
+
+        // --- DETAIL VIEW ---
+        window.openDetailView = function (deal) {
+            currentDetailDeal = deal;
+            const dateStr = deal.discovered_at ? new Date(deal.discovered_at).toLocaleDateString() : 'N/A';
+            const store = deal.online_store || 'Unknown';
+            const loc = (deal.city) ? `${deal.city}, ${deal.state}` : 'Online';
+
+            const detailContent = document.getElementById('detail-content');
+            detailContent.innerHTML = `
+                <div class="detail-section">
+                    <div class="detail-label">Store</div>
+                    <div class="detail-value">${store}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Price</div>
+                    <div class="detail-value" style="font-size: 32px; font-weight: 800;">$${deal.price}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Item</div>
+                    <div class="detail-value">${deal.item_name || 'Item'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Product</div>
+                    <div class="detail-value">${deal.listing_title || 'Untitled'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Location</div>
+                    <div class="detail-value">${loc}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Listed</div>
+                    <div class="detail-value">${dateStr}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Batch ID</div>
+                    <div class="detail-value">${deal.batch_id || '-'}</div>
+                </div>
+                <div class="detail-section">
+                    <a href="${deal.listing_url}" target="_blank" class="btn-link">View Full Listing ↗</a>
+                </div>
+            `;
+            document.getElementById('detail-overlay').classList.add('active');
+        }
+
+        window.closeDetailView = function () {
+            document.getElementById('detail-overlay').classList.remove('active');
+            currentDetailDeal = null;
+        }
+
+        window.rejectFromDetail = async function () {
+            if (!currentDetailDeal) return;
+            const id = currentDetailDeal.id;
+            closeDetailView();
+            deals = deals.filter(d => d.id != id);
+            updateDealCounter();
+            renderStack();
+            await supabase.from('deals').update({ status: 'deleted' }).eq('id', id);
+        }
+
+        window.saveFromDetail = async function () {
+            if (!currentDetailDeal) return;
+            const id = currentDetailDeal.id;
+            closeDetailView();
+            deals = deals.filter(d => d.id != id);
+            updateDealCounter();
+            renderStack();
+            await supabase.from('deals').update({ status: 'saved' }).eq('id', id);
         }
 
         // --- SAVED VIEW ---
