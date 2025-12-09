@@ -983,6 +983,11 @@
             transform: scale(0.98);
         }
 
+        .btn-refresh:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
         /* --- FULLSCREEN DETAIL VIEW --- */
         .detail-overlay {
             display: none;
@@ -1369,9 +1374,9 @@
                     <div class="empty-state-container" id="empty-state-container">
                         <div class="empty-state-icon">🎉</div>
                         <div class="empty-state-title">All Caught Up!</div>
-                        <div class="empty-state-text">You've reviewed all available deals. Check back later for new
-                            listings.</div>
-                        <button class="btn-refresh" onclick="loadDiscover()">Refresh Deals</button>
+                        <div class="empty-state-text" id="empty-state-message">You've reviewed all available deals.
+                            Check back later for new listings.</div>
+                        <button class="btn-refresh" id="refresh-btn" onclick="refreshDeals()">Refresh Deals</button>
                     </div>
                 </div>
                 <div class="actions-area">
@@ -1492,6 +1497,33 @@
         window.changeSort = function (val) {
             currentSort = val;
             loadDiscover();
+        }
+
+        window.refreshDeals = async function () {
+            const refreshBtn = document.getElementById('refresh-btn');
+            const emptyStateMessage = document.getElementById('empty-state-message');
+            refreshBtn.disabled = true;
+            refreshBtn.textContent = 'Checking...';
+
+            const { data, error } = await supabase
+                .from('deals')
+                .select('id,unique_id,listing_title,price,listing_url,online_store,discovered_at,item_name,batch_id,city,state')
+                .eq('status', 'new');
+
+            if (error) {
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Refresh Deals';
+                return console.error(error);
+            }
+
+            if (!data || data.length === 0) {
+                emptyStateMessage.textContent = 'Come back later—there are no new deals right now.';
+                refreshBtn.disabled = false;
+                refreshBtn.textContent = 'Refresh Deals';
+            } else {
+                // New deals found, reload normally
+                loadDiscover();
+            }
         }
 
         // --- DATA LOADING ---
