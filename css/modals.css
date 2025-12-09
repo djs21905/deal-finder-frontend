@@ -1,0 +1,219 @@
+/* Modal Dialog */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 1000;
+    animation: fadeIn 0.2s ease;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.modal-content {
+    background: var(--bg-card);
+    border-radius: 20px 20px 0 0;
+    padding: 24px 20px;
+    width: 100%;
+    animation: slideUp 0.3s ease;
+    box-shadow: 0 -10px 25px rgba(15, 23, 42, 0.1);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.modal-header {
+    margin-bottom: 16px;
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.modal-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 8px 0 0 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+.modal-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.modal-btn-cancel {
+    background: var(--bg-body);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.modal-btn-cancel:active {
+    background: var(--border);
+}
+
+.modal-btn-delete {
+    background: var(--error);
+    color: white;
+}
+
+.modal-btn-delete:active {
+    opacity: 0.8;
+}
+
+/* --- FULLSCREEN DETAIL VIEW --- */
+.detail-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: white;
+    z-index: 999;
+    flex-direction: column;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.detail-overlay.active {
+    display: flex;
+    pointer-events: auto;
+}
+
+.detail-header {
+    flex-shrink: 0;
+    padding: 16px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-card);
+}
+
+.detail-close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.detail-close-btn:hover {
+    background: var(--bg-body);
+    border-radius: 8px;
+}
+
+.detail-content {
+    flex: 1;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.detail-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.detail-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.detail-value {
+    font-size: 16px;
+    color: var(--text-primary);
+    line-height: 1.5;
+}
+
+.detail-actions {
+    flex-shrink: 0;
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+    background: var(--bg-body);
+    border-top: 1px solid var(--border);
+}
+
+.detail-btn {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.detail-btn-reject {
+    background: #FEF2F2;
+    color: var(--error);
+    border: 1px solid #FECACA;
+}
+
+.detail-btn-reject:active {
+    background: #FECACA;
+}
+
+.detail-btn-save {
+    background: #ECFDF5;
+    color: var(--success);
+    border: 1px solid #D1FAE5;
+}
+
+.detail-btn-save:active {
+    background: #D1FAE5;
+}

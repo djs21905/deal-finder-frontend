@@ -1,0 +1,205 @@
+/* --- CARDS CSS --- */
+.swipe-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-card);
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    transform-origin: 50% 100%;
+    cursor: grab;
+    transition: box-shadow 0.2s ease;
+    animation: cardEntrance 0.3s ease-out;
+    max-height: 100%;
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.95) translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.swipe-card:active {
+    cursor: grabbing;
+}
+
+.card-header {
+    padding: 10px 10px;
+    background: linear-gradient(to bottom, var(--bg-card), #F8FAFC);
+    border-bottom: 1px solid var(--border-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.badge-store {
+    background: var(--bg-body);
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 700;
+    padding: 4px 8px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+    border: 1px solid var(--border);
+}
+
+.price {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    letter-spacing: -1px;
+}
+
+.card-body {
+    padding: 10px;
+    flex: 1;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.item-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.item-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.25;
+    letter-spacing: -0.3px;
+}
+
+.meta-grid {
+    margin-top: 6px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 4px;
+}
+
+.meta-item {
+    font-size: 11px;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.card-footer {
+    display: none;
+}
+
+.btn-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    background: var(--accent);
+    color: white;
+    text-decoration: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-link:hover {
+    background: var(--accent-hover);
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+/* Buttons */
+.circle-btn {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    border: 2px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 22px;
+    cursor: pointer;
+    box-shadow: var(--shadow-md);
+    background: white;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.circle-btn:hover {
+    transform: scale(1.12);
+    box-shadow: var(--shadow-lg);
+}
+
+.circle-btn:active {
+    transform: scale(0.92);
+}
+
+.btn-nope {
+    color: var(--error);
+    border-color: #FECACA;
+}
+
+.btn-nope:hover {
+    background: #FEF2F2;
+}
+
+.btn-like {
+    color: var(--success);
+    border-color: #A7F3D0;
+}
+
+.btn-like:hover {
+    background: #ECFDF5;
+}
+
+/* Badges */
+.status-badge {
+    position: absolute;
+    top: 30px;
+    padding: 10px 20px;
+    border: 4px solid;
+    border-radius: 10px;
+    font-size: 32px;
+    font-weight: 800;
+    text-transform: uppercase;
+    opacity: 0;
+    z-index: 10;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    letter-spacing: 1px;
+}
+
+.badge-like {
+    right: 30px;
+    border-color: var(--success);
+    color: var(--success);
+    transform: rotate(15deg);
+}
+
+.badge-nope {
+    left: 30px;
+    border-color: var(--error);
+    color: var(--error);
+    transform: rotate(-15deg);
+}
