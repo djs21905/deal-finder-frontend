@@ -116,7 +116,7 @@
             border: 1px solid var(--border);
             border-radius: 10px;
             background: var(--bg-body);
-            font-size: 14px;
+            font-size: 16px;
             transition: all 0.2s ease;
             color: var(--text-primary);
         }
@@ -1482,7 +1482,11 @@
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
             const { error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) alert(error.message); else showApp();
+            if (error) alert(error.message); else {
+                // Reset viewport zoom after login
+                document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover');
+                showApp();
+            }
         }
 
         window.logout = async function () { await supabase.auth.signOut(); location.reload(); }
