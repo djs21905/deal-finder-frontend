@@ -13,7 +13,17 @@ window.login = async function (e) {
 }
 
 window.logout = async function () {
-    await window.supabase.auth.signOut({ scope: 'local' });
+    // Clear all Supabase storage keys to prevent auto re-login
+    const keysToRemove = [];
+    for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sb-')) {
+            keysToRemove.push(key);
+        }
+    }
+    keysToRemove.forEach(key => localStorage.removeItem(key));
+
+    await window.supabase.auth.signOut();
     window.closeLogoutModal();
     location.reload();
 }
