@@ -13,7 +13,8 @@ window.login = async function (e) {
 }
 
 window.logout = async function () {
-    await window.supabase.auth.signOut();
+    await window.supabase.auth.signOut({ scope: 'local' });
+    window.closeLogoutModal();
     location.reload();
 }
 
