@@ -2,10 +2,10 @@
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const SUPABASE_URL = 'https://jjjekqaopeaxspzxrxid.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImpqamVrcWFvcGVheHNwenhyeGlkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjUwOTI0OTYsImV4cCI6MjA4MDY2ODQ5Nn0.KWft22KvscGdHxaBp5FXk4xWhBq1WDiQYyFnlZJ9ajs';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_1v-KQGZ_fFn7APIEwk8tLw_apGG73ET';
 
 // Expose Supabase to global scope for other scripts
-window.supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+window.supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 // Global variables
 window.deals = [];
@@ -17,8 +17,8 @@ window.currentDetailDeal = null;
 
 // Initialize app
 async function init() {
-    const { data: { session } } = await window.supabase.auth.getSession();
-    if (session) window.showApp();
+    const { data, error } = await window.supabase.auth.getClaims();
+    if (data?.claims && !error) window.showApp();
 }
 
 // Event listeners
