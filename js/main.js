@@ -17,8 +17,14 @@ window.currentDetailDeal = null;
 
 // Initialize app
 async function init() {
-    const { data, error } = await window.supabase.auth.getClaims();
-    if (data?.claims && !error) window.showApp();
+    // Use getSession() to properly restore session from localStorage
+    const { data: { session }, error } = await window.supabase.auth.getSession();
+    if (session && !error) {
+        window.showApp();
+    } else {
+        // No session - show login screen
+        document.getElementById('login-container').style.display = 'flex';
+    }
 }
 
 // Event listeners

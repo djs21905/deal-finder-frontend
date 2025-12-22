@@ -1,0 +1,1006 @@
+/* Configuration Management Portal Styles */
+/* Mobile-first design with proper responsive breakpoints */
+
+/* ================================
+   CSS VARIABLES (Config-specific)
+   ================================ */
+:root {
+    --config-nav-height: 60px;
+    --config-header-height: 56px;
+}
+
+/* ================================
+   PAGE LAYOUT
+   ================================ */
+.config-page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100dvh;
+    background: var(--bg-body);
+}
+
+.config-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-card);
+    border-bottom: 1px solid var(--border);
+    padding: 16px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+}
+
+.config-header-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.config-header-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.config-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    padding-bottom: calc(var(--config-nav-height) + 24px + env(safe-area-inset-bottom));
+}
+
+/* ================================
+   BOTTOM NAVIGATION
+   ================================ */
+.config-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-around;
+    align-items: stretch;
+    height: var(--config-nav-height);
+    padding-bottom: env(safe-area-inset-bottom);
+    z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.config-nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 8px;
+    background: none;
+    border: none;
+    color: var(--text-tertiary);
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.config-nav-item:hover {
+    color: var(--text-secondary);
+}
+
+.config-nav-item.active {
+    color: var(--accent);
+}
+
+.config-nav-icon {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.config-nav-label {
+    font-size: 11px;
+    letter-spacing: 0.2px;
+}
+
+/* ================================
+   LOADING & EMPTY STATES
+   ================================ */
+.config-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.config-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: config-spin 0.8s linear infinite;
+    margin-bottom: 16px;
+}
+
+.config-spinner-small {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: config-spin 0.8s linear infinite;
+}
+
+@keyframes config-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.config-empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.config-empty-icon {
+    font-size: 64px;
+    margin-bottom: 16px;
+}
+
+.config-empty-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 8px 0;
+}
+
+.config-empty-text {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin: 0 0 24px 0;
+    max-width: 280px;
+}
+
+.config-error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+}
+
+.config-error-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+}
+
+.config-error-message {
+    font-size: 14px;
+    color: var(--error);
+    margin: 0 0 24px 0;
+}
+
+/* ================================
+   BUTTONS
+   ================================ */
+.config-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+}
+
+.config-btn-primary {
+    background: var(--accent);
+    color: white;
+}
+
+.config-btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+.config-btn-primary:disabled {
+    background: var(--text-tertiary);
+    cursor: not-allowed;
+}
+
+.config-btn-secondary {
+    background: var(--bg-body);
+    color: var(--text-primary);
+    border: 1px solid var(--border);
+}
+
+.config-btn-secondary:hover {
+    background: var(--border-light);
+}
+
+.config-btn-small {
+    padding: 8px 12px;
+    font-size: 12px;
+    background: var(--accent);
+    color: white;
+}
+
+.config-btn-small:hover {
+    background: var(--accent-hover);
+}
+
+.config-btn-icon {
+    font-size: 16px;
+}
+
+.config-btn-icon-only {
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    border-radius: 8px;
+    font-size: 18px;
+    transition: all 0.2s ease;
+}
+
+.config-btn-delete:hover {
+    background: rgba(239, 68, 68, 0.1);
+}
+
+.config-btn-activate {
+    background: var(--success);
+}
+
+.config-btn-activate:hover {
+    background: #059669;
+}
+
+/* ================================
+   CONFIG VIEW
+   ================================ */
+.config-view {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.config-header-card {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--border);
+}
+
+.config-header-card.config-preview-mode {
+    border-color: var(--warning);
+    background: linear-gradient(to bottom, rgba(245, 158, 11, 0.05), var(--bg-card));
+}
+
+.config-version-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.config-version-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-version-badge.active {
+    background: rgba(16, 185, 129, 0.15);
+    color: var(--success);
+}
+
+.config-version-badge.preview {
+    background: rgba(245, 158, 11, 0.15);
+    color: var(--warning);
+}
+
+.config-version-number {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+}
+
+.config-header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/* ================================
+   SECTIONS
+   ================================ */
+.config-section {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.config-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.config-page-title {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0 0 20px 0;
+}
+
+.config-no-data {
+    color: var(--text-tertiary);
+    font-size: 13px;
+    font-style: italic;
+    margin: 0;
+    padding: 12px 0;
+}
+
+/* ================================
+   ACCORDIONS
+   ================================ */
+.config-accordion {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 12px;
+}
+
+.config-accordion:last-child {
+    margin-bottom: 0;
+}
+
+.config-accordion-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: var(--bg-body);
+    border: none;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    text-align: left;
+}
+
+.config-accordion-header:hover {
+    background: var(--border-light);
+}
+
+.config-accordion-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.config-accordion-icon {
+    font-size: 18px;
+}
+
+.config-accordion-count {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-left: auto;
+    margin-right: 8px;
+}
+
+.config-accordion-arrow {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    transition: transform 0.2s ease;
+}
+
+.config-accordion.open .config-accordion-arrow {
+    transform: rotate(180deg);
+}
+
+.config-accordion-content {
+    display: none;
+    padding: 16px;
+    background: var(--bg-card);
+    border-top: 1px solid var(--border);
+}
+
+.config-accordion.open .config-accordion-content {
+    display: block;
+}
+
+/* ================================
+   CHIPS
+   ================================ */
+.config-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.config-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.config-chip-state {
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent);
+}
+
+.config-chip-alias {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+}
+
+.config-chip-exclude {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error);
+}
+
+.config-chip-editable {
+    padding-right: 6px;
+}
+
+.config-chip-remove {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 18px;
+    height: 18px;
+    border: none;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    color: inherit;
+    transition: background 0.2s ease;
+    padding: 0;
+    line-height: 1;
+}
+
+.config-chip-remove:hover {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+/* ================================
+   PROPERTIES
+   ================================ */
+.config-properties {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.config-property {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border-light);
+}
+
+.config-property:last-child {
+    border-bottom: none;
+}
+
+.config-property-key {
+    font-size: 13px;
+    color: var(--text-secondary);
+    flex-shrink: 0;
+}
+
+.config-property-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-primary);
+    text-align: right;
+    word-break: break-word;
+    max-width: 60%;
+}
+
+/* ================================
+   ITEMS LIST & CARDS
+   ================================ */
+.config-items-search {
+    margin-bottom: 16px;
+}
+
+.config-search-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.config-search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.config-items-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.config-item-card {
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s ease;
+}
+
+.config-item-card:hover {
+    border-color: var(--accent);
+}
+
+.config-item-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+}
+
+.config-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.config-item-name {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.config-item-price-range {
+    font-size: 12px;
+}
+
+.config-price-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success);
+    border-radius: 6px;
+    font-weight: 600;
+}
+
+.config-item-arrow {
+    font-size: 12px;
+    color: var(--text-tertiary);
+    transition: transform 0.2s ease;
+}
+
+.config-item-card.open .config-item-arrow {
+    transform: rotate(180deg);
+}
+
+.config-item-content {
+    display: none;
+    padding: 0 16px 16px;
+}
+
+.config-item-card.open .config-item-content {
+    display: block;
+}
+
+.config-item-section {
+    margin-bottom: 12px;
+}
+
+.config-item-section:last-child {
+    margin-bottom: 0;
+}
+
+.config-item-label {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 8px;
+}
+
+/* ================================
+   VERSION HISTORY
+   ================================ */
+.config-history {
+    display: flex;
+    flex-direction: column;
+}
+
+.config-versions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.config-version-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: var(--shadow-sm);
+}
+
+.config-version-card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow-md);
+}
+
+.config-version-card.active {
+    border-color: var(--success);
+    background: linear-gradient(to right, rgba(16, 185, 129, 0.05), var(--bg-card));
+}
+
+.config-version-card-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.config-version-card-number {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.config-version-active-badge {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--success);
+    background: rgba(16, 185, 129, 0.15);
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.config-version-card-arrow {
+    color: var(--text-tertiary);
+    font-size: 18px;
+}
+
+/* ================================
+   EDITOR FORM
+   ================================ */
+.config-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.config-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.config-editor-section {
+    background: var(--bg-card);
+    border-radius: 16px;
+    padding: 20px;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid var(--border);
+}
+
+.config-editor-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+}
+
+.config-editor-section-header .config-editor-section-title {
+    margin-bottom: 0;
+}
+
+.config-editor-section-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin: 0 0 16px 0;
+}
+
+.config-form-group {
+    margin-bottom: 16px;
+}
+
+.config-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.config-form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.config-form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.config-form-input {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 14px;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    transition: all 0.2s ease;
+}
+
+.config-form-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.config-form-input.config-input-error {
+    border-color: var(--error);
+}
+
+.config-form-hint {
+    display: block;
+    font-size: 11px;
+    color: var(--text-tertiary);
+    margin-top: 6px;
+}
+
+.config-form-error {
+    display: none;
+    font-size: 12px;
+    color: var(--error);
+    margin-top: 6px;
+}
+
+.config-json-textarea {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    font-size: 13px;
+    font-family: 'SF Mono', 'Monaco', 'Inconsolata', 'Fira Code', monospace;
+    background: var(--bg-body);
+    color: var(--text-primary);
+    resize: vertical;
+    min-height: 80px;
+    transition: all 0.2s ease;
+}
+
+.config-json-textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.config-json-textarea.config-input-error {
+    border-color: var(--error);
+}
+
+/* Chip Input */
+.config-chip-input-container {
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    transition: all 0.2s ease;
+}
+
+.config-chip-input-container:focus-within {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    background: white;
+}
+
+.config-chip-input-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.config-chip-input-chips:empty {
+    margin-bottom: 0;
+}
+
+.config-chip-input {
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 6px 0;
+    font-size: 14px;
+    color: var(--text-primary);
+}
+
+.config-chip-input:focus {
+    outline: none;
+}
+
+.config-chip-input::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Item Editor */
+.config-items-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.config-item-editor {
+    background: var(--bg-body);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+}
+
+.config-item-editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.config-item-editor-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-secondary);
+}
+
+/* Form Actions */
+.config-form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    padding-top: 8px;
+}
+
+/* ================================
+   TOAST NOTIFICATIONS
+   ================================ */
+.config-toast {
+    position: fixed;
+    bottom: calc(var(--config-nav-height) + 20px + env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%) translateY(100px);
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.3s ease;
+}
+
+.config-toast.show {
+    transform: translateX(-50%) translateY(0);
+    opacity: 1;
+}
+
+.config-toast-success {
+    background: var(--success);
+    color: white;
+}
+
+.config-toast-error {
+    background: var(--error);
+    color: white;
+}
+
+.config-toast-info {
+    background: var(--primary);
+    color: white;
+}
+
+/* ================================
+   RESPONSIVE ADJUSTMENTS
+   ================================ */
+@media (min-width: 768px) {
+    .config-content {
+        max-width: 768px;
+        margin: 0 auto;
+        padding: 24px;
+    }
+
+    .config-header-card {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    .config-form-actions {
+        justify-content: flex-start;
+    }
+}
+
+@media (min-width: 1024px) {
+    .config-content {
+        max-width: 900px;
+    }
+}
