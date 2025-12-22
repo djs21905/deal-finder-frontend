@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+    <title>Configuration - Deals Manager</title>
+
+    <!-- App Configuration for iOS -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Config">
+    <meta name="theme-color" content="#3B82F6">
+
+    <!-- App Icon (180x180 for iOS) -->
+    <link rel="apple-touch-icon" href="assets/AppIcon.appiconset/180.png">
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Shared CSS from main app -->
+    <link rel="stylesheet" href="css/theme.css">
+
+    <!-- Config-specific CSS -->
+    <link rel="stylesheet" href="css/config.css">
+
+    <!-- Configurable API URL - set this before loading the scripts -->
+    <script>
+        // Configure the API base URL here
+        // Change this to your actual API endpoint
+        window.CONFIG_API_URL = '/config';
+    </script>
+</head>
+
+<body>
+    <div class="config-page">
+        <!-- Header -->
+        <header class="config-header">
+            <h1 class="config-header-title">Configuration</h1>
+            <a href="index.html" class="config-header-link">
+                ← Back to Deals
+            </a>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="config-content" id="config-content">
+            <!-- Content will be dynamically rendered here -->
+            <div class="config-loading">
+                <div class="config-spinner"></div>
+                <p>Loading configuration...</p>
+            </div>
+        </main>
+
+        <!-- Bottom Navigation -->
+        <nav class="config-nav">
+            <button class="config-nav-item active" data-view="active" onclick="ConfigApp.navigateTo('active')">
+                <span class="config-nav-icon">⚙️</span>
+                <span class="config-nav-label">Active</span>
+            </button>
+            <button class="config-nav-item" data-view="history" onclick="ConfigApp.navigateTo('history')">
+                <span class="config-nav-icon">📜</span>
+                <span class="config-nav-label">History</span>
+            </button>
+            <button class="config-nav-item" data-view="editor" onclick="ConfigApp.navigateTo('editor')">
+                <span class="config-nav-icon">✏️</span>
+                <span class="config-nav-label">Editor</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Configuration Management Portal Scripts -->
+    <script src="js/config-api.js"></script>
+    <script src="js/config-ui.js"></script>
+    <script src="js/config.js"></script>
+</body>
+
+</html>
