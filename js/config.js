@@ -21,11 +21,36 @@ const ConfigApp = {
      * Initialize the application
      */
     async init() {
+        // Check if API is enabled
+        if (!window.CONFIG_API_ENABLED) {
+            this.showComingSoon();
+            return;
+        }
+
         // Set up navigation
         this.setupNavigation();
 
         // Load initial data
         await this.loadActiveConfig();
+    },
+
+    /**
+     * Show Coming Soon message when API is not ready
+     */
+    showComingSoon() {
+        const container = document.getElementById('config-content');
+        container.innerHTML = `
+            <div class="config-empty-state">
+                <div class="config-empty-icon">🚧</div>
+                <h2 class="config-empty-title">Coming Soon</h2>
+                <p class="config-empty-text">The Configuration Portal is under development. Check back soon!</p>
+                <a href="index.html" class="config-btn config-btn-primary">
+                    ← Back to Deals
+                </a>
+            </div>
+        `;
+        // Hide the bottom nav since features aren't available
+        document.querySelector('.config-nav').style.display = 'none';
     },
 
     /**
