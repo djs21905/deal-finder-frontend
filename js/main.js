@@ -21,6 +21,9 @@ async function init() {
     const { data: { session }, error } = await window.supabase.auth.getSession();
     if (session && !error) {
         window.showApp();
+    } else {
+        // No session - show login screen
+        document.getElementById('login-container').style.display = 'flex';
     }
 }
 
