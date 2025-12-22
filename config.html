@@ -30,6 +30,20 @@
         // Change this to your actual API endpoint
         window.CONFIG_API_URL = 'https://mkqrctf6uh.execute-api.us-east-1.amazonaws.com/config';
     </script>
+
+    <!-- Supabase Client - uses JWT already stored in browser from main app login -->
+    <script type="module">
+        import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+        const SUPABASE_URL = 'https://jjjekqaopeaxspzxrxid.supabase.co';
+        const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_1v-KQGZ_fFn7APIEwk8tLw_apGG73ET';
+
+        // Expose Supabase to global scope - it will automatically use the stored session/JWT
+        window.supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+        // Signal that supabase is ready
+        window.dispatchEvent(new Event('supabaseReady'));
+    </script>
 </head>
 
 <body>

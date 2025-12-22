@@ -340,7 +340,18 @@ const ConfigApp = {
 window.ConfigApp = ConfigApp;
 window.ConfigState = ConfigState;
 
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize when Supabase is ready (auth check complete)
+// The supabaseReady event is dispatched from config.html after auth check
+window.addEventListener('supabaseReady', () => {
     ConfigApp.init();
+});
+
+// Fallback: If supabase is already available, initialize after a short delay
+document.addEventListener('DOMContentLoaded', () => {
+    // Give supabase module time to load, then check if ready
+    setTimeout(() => {
+        if (window.supabase && !ConfigState.activeConfig && !ConfigState.isLoading) {
+            ConfigApp.init();
+        }
+    }, 500);
 });
